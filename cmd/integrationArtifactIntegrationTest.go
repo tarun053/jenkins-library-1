@@ -71,7 +71,11 @@ func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegratio
 
 	var commonPipelineEnvironment integrationArtifactGetServiceEndpointCommonPipelineEnvironment
 
-	runIntegrationArtifactGetServiceEndpoint(&getServiceEndpointOptions, nil, httpClient, &commonPipelineEnvironment)
+	err := runIntegrationArtifactGetServiceEndpoint(&getServiceEndpointOptions, nil, httpClient, &commonPipelineEnvironment)
+	if err != nil {
+		return fmt.Errorf("failed retrieve iFlowServiceEndpoint with IntegrationArtifactGetServiceEndpoint step: %w", err)
+	}
+
 	serviceUrl := commonPipelineEnvironment.custom.iFlowServiceEndpoint
 	log.Entry().Info("The Service URL : ", serviceUrl)
 	log.Entry().WithField("LogField", "Log field content").Info("This is just a demo for a simple step.")
