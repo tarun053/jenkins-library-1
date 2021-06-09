@@ -50,6 +50,7 @@ func GetAllStepMetadata() map[string]config.StepData {
 		"integrationArtifactDownload":             integrationArtifactDownloadMetadata(),
 		"integrationArtifactGetMplStatus":         integrationArtifactGetMplStatusMetadata(),
 		"integrationArtifactGetServiceEndpoint":   integrationArtifactGetServiceEndpointMetadata(),
+		"integrationArtifactIntegrationTest":      integrationArtifactIntegrationTestMetadata(),
 		"integrationArtifactUpdateConfiguration":  integrationArtifactUpdateConfigurationMetadata(),
 		"integrationArtifactUpload":               integrationArtifactUploadMetadata(),
 		"jsonApplyPatch":                          jsonApplyPatchMetadata(),
