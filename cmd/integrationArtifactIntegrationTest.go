@@ -60,6 +60,8 @@ func integrationArtifactIntegrationTest(config integrationArtifactIntegrationTes
 }
 
 func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpClient piperhttp.Sender) error {
+
+	httpApiClient := &piperhttp.Client{}
 	getServiceEndpointOptions := integrationArtifactGetServiceEndpointOptions{
 		Username:              config.Username,
 		Password:              config.Password,
@@ -71,17 +73,31 @@ func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegratio
 
 	var commonPipelineEnvironment integrationArtifactGetServiceEndpointCommonPipelineEnvironment
 
-	err := runIntegrationArtifactGetServiceEndpoint(&getServiceEndpointOptions, nil, httpClient, &commonPipelineEnvironment)
+	err := runIntegrationArtifactGetServiceEndpoint(&getServiceEndpointOptions, nil, httpApiClient, &commonPipelineEnvironment)
 	if err != nil {
 		return fmt.Errorf("failed retrieve iFlowServiceEndpoint with IntegrationArtifactGetServiceEndpoint step: %w", err)
 	}
 
-	serviceUrl := commonPipelineEnvironment.custom.iFlowServiceEndpoint
-	log.Entry().Info("The Service URL : ", serviceUrl)
+	serviceEndpointUrl := commonPipelineEnvironment.custom.iFlowServiceEndpoint
+	log.Entry().Info("The Service URL : ", serviceEndpointUrl)
 	log.Entry().WithField("LogField", "Log field content").Info("This is just a demo for a simple step.")
 
+	// Here we trigger the iFlow Service Endpoint.
+	IflowErr := callIFlowURL(config, telemetryData, utils, httpClient, serviceEndpointUrl)
+	if IflowErr != nil {
+		log.SetErrorCategory(log.ErrorService)
+		return fmt.Errorf("failed to execute iFlow: %w", IflowErr)
+	}
+
+	// Here we get the MplStatus after a successful iFlow run
+
+	return nil
+}
+
+func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpIFlowClient piperhttp.Sender, serviceEndpointUrl string) error {
+
 	// Example of calling methods from external dependencies directly on utils:
-	exists, err := utils.FileExists("file.txt")
+	exists, err := utils.FileExists(config.MessageBodyPath)
 	if err != nil {
 		// It is good practice to set an error category.
 		// Most likely you want to do this at the place where enough context is known.
