@@ -2,12 +2,15 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/SAP/jenkins-library/pkg/command"
+	"github.com/SAP/jenkins-library/pkg/cpi"
 	piperhttp "github.com/SAP/jenkins-library/pkg/http"
 	"github.com/SAP/jenkins-library/pkg/log"
 	"github.com/SAP/jenkins-library/pkg/piperutils"
 	"github.com/SAP/jenkins-library/pkg/telemetry"
+	"github.com/pkg/errors"
 )
 
 type integrationArtifactIntegrationTestUtils interface {
@@ -109,6 +112,18 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 		log.SetErrorCategory(log.ErrorConfiguration)
 		return fmt.Errorf("cannot run without important file")
 	}
+
+	clientOptions := piperhttp.ClientOptions{}
+	tokenParameters := cpi.TokenParameters{TokenURL: config.OAuthTokenProviderURL, Username: config.Username, Password: config.Password, Client: httpIFlowClient}
+	token, err := cpi.CommonUtils.GetBearerToken(tokenParameters)
+	if err != nil {
+		return errors.Wrap(err, "failed to fetch Bearer Token")
+	}
+	clientOptions.Token = fmt.Sprintf("Bearer %s", token)
+	httpIFlowClient.SetOptions(clientOptions)
+	httpMethod := "POST"
+	header := make(http.Header)
+	header.Add("Content-Type", config.ContentType)
 
 	return nil
 }
