@@ -111,9 +111,9 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 		}
 		exists, err := utils.FileExists(config.MessageBodyPath)
 		if err != nil {
-			log.SetErrorCategory(log.ErrorConfiguration)
+			log.SetErrorCategory(log.ErrorUndefined)
 			// Always wrap non-descriptive errors to enrich them with context for when they appear in the log:
-			return fmt.Errorf("failed to check message file %s: %w", config.MessageBodyPath, err)
+			return fmt.Errorf("failed to check message body file %s: %w", config.MessageBodyPath, err)
 		}
 		if !exists {
 			log.SetErrorCategory(log.ErrorConfiguration)
