@@ -124,6 +124,14 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 	httpMethod := "POST"
 	header := make(http.Header)
 	header.Add("Content-Type", config.ContentType)
+	iFlowResp, httpErr := httpIFlowClient.SendRequest(httpMethod, serviceEndpointUrl, filebuffer, header, nil)
+    
+	if httpErr != nil {
+		return errors.Wrapf(httpErr, "HTTP %q request to %q failed with error", httpMethod, serviceEndpointUrl)
+	}
+
 
 	return nil
 }
+
+
