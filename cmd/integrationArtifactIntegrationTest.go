@@ -66,26 +66,18 @@ func integrationArtifactIntegrationTest(config integrationArtifactIntegrationTes
 
 func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpClient piperhttp.Sender) error {
 
-	httpApiClient := &piperhttp.Client{}
-	getServiceEndpointOptions := integrationArtifactGetServiceEndpointOptions{
-		Username:              config.Username,
-		Password:              config.Password,
-		IntegrationFlowID:     config.IntegrationFlowID,
-		Platform:              config.Platform,
-		Host:                  config.Host,
-		OAuthTokenProviderURL: config.OAuthTokenProviderURL,
-	}
-
 	var commonPipelineEnvironment integrationArtifactGetServiceEndpointCommonPipelineEnvironment
-
-	err := runIntegrationArtifactGetServiceEndpoint(&getServiceEndpointOptions, nil, httpApiClient, &commonPipelineEnvironment)
-	if err != nil {
-		return fmt.Errorf("failed retrieve iFlowServiceEndpoint with IntegrationArtifactGetServiceEndpoint step: %w", err)
+	var serviceEndpointUrl string
+	if len(config.IFlowServiceEndpointURL) > 0 {
+		serviceEndpointUrl = config.IFlowServiceEndpointURL
+	} else {
+		serviceEndpointUrl = commonPipelineEnvironment.custom.iFlowServiceEndpoint
+		if len(serviceEndpointUrl) == 0 {
+			log.SetErrorCategory(log.ErrorConfiguration)
+			return fmt.Errorf("IFlowServiceEndpointURL not set")
+		}
 	}
-
-	serviceEndpointUrl := commonPipelineEnvironment.custom.iFlowServiceEndpoint
 	log.Entry().Info("The Service URL : ", serviceEndpointUrl)
-	log.Entry().WithField("LogField", "Log field content").Info("This is just a demo for a simple step.")
 
 	// Here we trigger the iFlow Service Endpoint.
 	IflowErr := callIFlowURL(config, telemetryData, utils, httpClient, serviceEndpointUrl)
@@ -93,8 +85,6 @@ func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegratio
 		log.SetErrorCategory(log.ErrorService)
 		return fmt.Errorf("failed to execute iFlow: %w", IflowErr)
 	}
-
-	// Here we get the MplStatus after a successful iFlow run
 
 	return nil
 }
@@ -132,7 +122,7 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 	} else {
 		httpMethod = "GET"
 	}
-
+	
 	clientOptions := piperhttp.ClientOptions{}
 	tokenParameters := cpi.TokenParameters{TokenURL: config.OAuthTokenProviderURL, Username: config.Username, Password: config.Password, Client: httpIFlowClient}
 	token, err := cpi.CommonUtils.GetBearerToken(tokenParameters)

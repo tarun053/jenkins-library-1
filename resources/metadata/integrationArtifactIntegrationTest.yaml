@@ -69,19 +69,27 @@ spec:
           - STAGES
           - STEPS
         mandatory: true
+      - name: iFlowServiceEndpointUrl
+        type: string
+        description: Specifies the URL endpoint of the iFlow. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
+        scope:
+          - PARAMETERS
+          - STAGES
+          - STEPS
+        mandatory: false
       - name: contentType
         type: string
-        description: Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
+        description: Specifies the content type of the file defined in messageBodyPath e.g. application/json
         scope:
           - PARAMETERS
           - STAGES
           - STEPS
-        mandatory: true
+        mandatory: false
       - name: messageBodyPath
         type: string
-        description: Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
+        description: Speficfies the relative file path to the message body.
         scope:
           - PARAMETERS
           - STAGES
           - STEPS
-        mandatory: true
+        mandatory: false

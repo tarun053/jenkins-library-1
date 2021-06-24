@@ -15,14 +15,15 @@ import (
 )
 
 type integrationArtifactIntegrationTestOptions struct {
-	Username              string `json:"username,omitempty"`
-	Password              string `json:"password,omitempty"`
-	IntegrationFlowID     string `json:"integrationFlowId,omitempty"`
-	Platform              string `json:"platform,omitempty"`
-	Host                  string `json:"host,omitempty"`
-	OAuthTokenProviderURL string `json:"oAuthTokenProviderUrl,omitempty"`
-	ContentType           string `json:"contentType,omitempty"`
-	MessageBodyPath       string `json:"messageBodyPath,omitempty"`
+	Username                string `json:"username,omitempty"`
+	Password                string `json:"password,omitempty"`
+	IntegrationFlowID       string `json:"integrationFlowId,omitempty"`
+	Platform                string `json:"platform,omitempty"`
+	Host                    string `json:"host,omitempty"`
+	OAuthTokenProviderURL   string `json:"oAuthTokenProviderUrl,omitempty"`
+	IFlowServiceEndpointURL string `json:"iFlowServiceEndpointUrl,omitempty"`
+	ContentType             string `json:"contentType,omitempty"`
+	MessageBodyPath         string `json:"messageBodyPath,omitempty"`
 }
 
 // IntegrationArtifactIntegrationTestCommand Test xxxx
@@ -106,16 +107,15 @@ func addIntegrationArtifactIntegrationTestFlags(cmd *cobra.Command, stepConfig *
 	cmd.Flags().StringVar(&stepConfig.Platform, "platform", os.Getenv("PIPER_platform"), "Specifies the running platform of the SAP Cloud platform integraion service")
 	cmd.Flags().StringVar(&stepConfig.Host, "host", os.Getenv("PIPER_host"), "Specifies the protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
 	cmd.Flags().StringVar(&stepConfig.OAuthTokenProviderURL, "oAuthTokenProviderUrl", os.Getenv("PIPER_oAuthTokenProviderUrl"), "Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
-	cmd.Flags().StringVar(&stepConfig.ContentType, "contentType", os.Getenv("PIPER_contentType"), "Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
-	cmd.Flags().StringVar(&stepConfig.MessageBodyPath, "messageBodyPath", os.Getenv("PIPER_messageBodyPath"), "Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
+	cmd.Flags().StringVar(&stepConfig.IFlowServiceEndpointURL, "iFlowServiceEndpointUrl", os.Getenv("PIPER_iFlowServiceEndpointUrl"), "Specifies the URL endpoint of the iFlow. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
+	cmd.Flags().StringVar(&stepConfig.ContentType, "contentType", os.Getenv("PIPER_contentType"), "Specifies the content type of the file defined in messageBodyPath e.g. application/json")
+	cmd.Flags().StringVar(&stepConfig.MessageBodyPath, "messageBodyPath", os.Getenv("PIPER_messageBodyPath"), "Speficfies the relative file path to the message body.")
 
 	cmd.MarkFlagRequired("username")
 	cmd.MarkFlagRequired("password")
 	cmd.MarkFlagRequired("integrationFlowId")
 	cmd.MarkFlagRequired("host")
 	cmd.MarkFlagRequired("oAuthTokenProviderUrl")
-	cmd.MarkFlagRequired("contentType")
-	cmd.MarkFlagRequired("messageBodyPath")
 }
 
 // retrieve step metadata
@@ -199,11 +199,20 @@ func integrationArtifactIntegrationTestMetadata() config.StepData {
 						Default:     os.Getenv("PIPER_oAuthTokenProviderUrl"),
 					},
 					{
+						Name:        "iFlowServiceEndpointUrl",
+						ResourceRef: []config.ResourceReference{},
+						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
+						Type:        "string",
+						Mandatory:   false,
+						Aliases:     []config.Alias{},
+						Default:     os.Getenv("PIPER_iFlowServiceEndpointUrl"),
+					},
+					{
 						Name:        "contentType",
 						ResourceRef: []config.ResourceReference{},
 						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
 						Type:        "string",
-						Mandatory:   true,
+						Mandatory:   false,
 						Aliases:     []config.Alias{},
 						Default:     os.Getenv("PIPER_contentType"),
 					},
@@ -212,7 +221,7 @@ func integrationArtifactIntegrationTestMetadata() config.StepData {
 						ResourceRef: []config.ResourceReference{},
 						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
 						Type:        "string",
-						Mandatory:   true,
+						Mandatory:   false,
 						Aliases:     []config.Alias{},
 						Default:     os.Getenv("PIPER_messageBodyPath"),
 					},
