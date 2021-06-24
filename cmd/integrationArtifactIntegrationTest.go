@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/SAP/jenkins-library/pkg/command"
@@ -99,18 +101,36 @@ func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegratio
 
 func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpIFlowClient piperhttp.Sender, serviceEndpointUrl string) error {
 
-	// Example of calling methods from external dependencies directly on utils:
-	exists, err := utils.FileExists(config.MessageBodyPath)
-	if err != nil {
-		// It is good practice to set an error category.
-		// Most likely you want to do this at the place where enough context is known.
-		log.SetErrorCategory(log.ErrorConfiguration)
-		// Always wrap non-descriptive errors to enrich them with context for when they appear in the log:
-		return fmt.Errorf("failed to check for important file: %w", err)
-	}
-	if !exists {
-		log.SetErrorCategory(log.ErrorConfiguration)
-		return fmt.Errorf("cannot run without important file")
+	var fileBody []byte
+	var httpMethod string
+	var header http.Header
+	if len(config.MessageBodyPath) > 0 {
+		if len(config.ContentType) == 0 {
+			log.SetErrorCategory(log.ErrorConfiguration)
+			return fmt.Errorf("message body file %s given, but no ContentType", config.MessageBodyPath)
+		}
+		exists, err := utils.FileExists(config.MessageBodyPath)
+		if err != nil {
+			log.SetErrorCategory(log.ErrorConfiguration)
+			// Always wrap non-descriptive errors to enrich them with context for when they appear in the log:
+			return fmt.Errorf("failed to check message file %s: %w", config.MessageBodyPath, err)
+		}
+		if !exists {
+			log.SetErrorCategory(log.ErrorConfiguration)
+			return fmt.Errorf("message body file %s configured, but not found", config.MessageBodyPath)
+		}
+
+		var fileErr error
+		fileBody, fileErr = ioutil.ReadFile(config.MessageBodyPath)
+		if fileErr != nil {
+			log.SetErrorCategory(log.ErrorUndefined)
+			return fmt.Errorf("failed to read file %s: %w", config.MessageBodyPath, fileErr)
+		}
+		httpMethod = "POST"
+		header = make(http.Header)
+		header.Add("Content-Type", config.ContentType)
+	} else {
+		httpMethod = "GET"
 	}
 
 	clientOptions := piperhttp.ClientOptions{}
@@ -121,13 +141,22 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 	}
 	clientOptions.Token = fmt.Sprintf("Bearer %s", token)
 	httpIFlowClient.SetOptions(clientOptions)
-	httpMethod := "POST"
-	header := make(http.Header)
-	header.Add("Content-Type", config.ContentType)
-	iFlowResp, httpErr := httpIFlowClient.SendRequest(httpMethod, serviceEndpointUrl, filebuffer, header, nil)
+	iFlowResp, httpErr := httpIFlowClient.SendRequest(httpMethod, serviceEndpointUrl, bytes.NewBuffer(fileBody), header, nil)
 
 	if httpErr != nil {
 		return errors.Wrapf(httpErr, "HTTP %q request to %q failed with error", httpMethod, serviceEndpointUrl)
+	}
+
+	if iFlowResp == nil {
+		return errors.Errorf("did not retrieve any HTTP response")
+	}
+
+	if iFlowResp.StatusCode < 400 {
+		log.Entry().
+			WithField(config.IntegrationFlowID, serviceEndpointUrl).
+			Infof("successfully triggered %s with status code %d", serviceEndpointUrl, iFlowResp.StatusCode)
+	} else {
+		return fmt.Errorf("request %s failed with response code %d", serviceEndpointUrl, iFlowResp.StatusCode)
 	}
 
 	return nil
