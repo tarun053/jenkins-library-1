@@ -149,6 +149,34 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("nil fileBody (SUCCESS) callIFlowURL", func(t *testing.T) {
+		dir, err := ioutil.TempDir("", "")
+		defer os.RemoveAll(dir) // clean up
+		assert.NoError(t, err, "Error when creating temp dir")
+		//init
+		config := integrationArtifactIntegrationTestOptions{
+			Host:                  "https://demo",
+			OAuthTokenProviderURL: "https://demo/oauth/token",
+			Username:              "demouser",
+			Password:              "******",
+			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
+			Platform:              "cf",
+			MessageBodyPath:       filepath.Join(dir, "test.txt"),
+			ContentType:           "txt",
+		}
+
+		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils.AddFile(config.MessageBodyPath, []byte(nil)) //have to add a file here to see in utils
+		ioutil.WriteFile(config.MessageBodyPath, []byte(nil), 0755)
+		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
+
+		//test
+		err = callIFlowURL(&config, nil, utils, &httpClient, "")
+
+		//assert
+		assert.NoError(t, err)
+	})
+
 	// t.Run("error path", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	// init
