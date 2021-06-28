@@ -122,9 +122,10 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 	} else {
 		httpMethod = "GET"
 	}
-	
+
+	serviceKey, err := cpi.ReadCpiServiceKey(config.IFlowServiceKey)
 	clientOptions := piperhttp.ClientOptions{}
-	tokenParameters := cpi.TokenParameters{TokenURL: config.OAuthTokenProviderURL, Username: config.Username, Password: config.Password, Client: httpIFlowClient}
+	tokenParameters := cpi.TokenParameters{TokenURL: serviceKey.OAuth.OAuthTokenProviderURL, Username: serviceKey.OAuth.ClientID, Password: serviceKey.OAuth.ClientSecret, Client: httpIFlowClient}
 	token, err := cpi.CommonUtils.GetBearerToken(tokenParameters)
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch Bearer Token")

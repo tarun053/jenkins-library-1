@@ -50,15 +50,20 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 
 	t.Run("MessageBodyPath good but no ContentType (ERROR) callIFlowURL", func(t *testing.T) {
 		//init
+		iFlowServiceKey := `{
+			"oauth": {
+				"url": "https://demo",
+				"clientid": "demouser",
+				"clientsecret": "******",
+				"tokenurl": "https://demo/oauth/token"
+			}
+		}`
 		config := integrationArtifactIntegrationTestOptions{
-			Host:                  "https://demo",
-			OAuthTokenProviderURL: "https://demo/oauth/token",
-			Username:              "demouser",
-			Password:              "******",
-			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
-			Platform:              "cf",
-			MessageBodyPath:       "/file.txt",
-			ContentType:           "",
+			IFlowServiceKey:   iFlowServiceKey,
+			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
+			Platform:          "cf",
+			MessageBodyPath:   "/file.txt",
+			ContentType:       "",
 		}
 
 		utils := newIntegrationArtifactIntegrationTestTestsUtils()
@@ -74,15 +79,20 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 
 	t.Run("MessageBodyPath and ContentType good but file missing (ERROR) callIFlowURL", func(t *testing.T) {
 		//init
+		iFlowServiceKey := `{
+			"oauth": {
+				"url": "https://demo",
+				"clientid": "demouser",
+				"clientsecret": "******",
+				"tokenurl": "https://demo/oauth/token"
+			}
+		}`
 		config := integrationArtifactIntegrationTestOptions{
-			Host:                  "https://demo",
-			OAuthTokenProviderURL: "https://demo/oauth/token",
-			Username:              "demouser",
-			Password:              "******",
-			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
-			Platform:              "cf",
-			MessageBodyPath:       "test.txt",
-			ContentType:           "txt",
+			IFlowServiceKey:   iFlowServiceKey,
+			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
+			Platform:          "cf",
+			MessageBodyPath:   "test.txt",
+			ContentType:       "txt",
 		}
 
 		utils := newIntegrationArtifactIntegrationTestTestsUtils()
@@ -101,15 +111,20 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 		defer os.RemoveAll(dir) // clean up
 		assert.NoError(t, err, "Error when creating temp dir")
 		//init
+		iFlowServiceKey := `{
+			"oauth": {
+				"url": "https://demo",
+				"clientid": "demouser",
+				"clientsecret": "******",
+				"tokenurl": "https://demo/oauth/token"
+			}
+		}`
 		config := integrationArtifactIntegrationTestOptions{
-			Host:                  "https://demo",
-			OAuthTokenProviderURL: "https://demo/oauth/token",
-			Username:              "demouser",
-			Password:              "******",
-			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
-			Platform:              "cf",
-			MessageBodyPath:       filepath.Join(dir, "test.txt"),
-			ContentType:           "txt",
+			IFlowServiceKey:   iFlowServiceKey,
+			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
+			Platform:          "cf",
+			MessageBodyPath:   filepath.Join(dir, "test.txt"),
+			ContentType:       "txt",
 		}
 
 		utils := newIntegrationArtifactIntegrationTestTestsUtils()
@@ -126,15 +141,20 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 
 	t.Run("No MessageBodyPath still works (SUCCESS) callIFlowURL", func(t *testing.T) {
 		//init
+		iFlowServiceKey := `{
+			"oauth": {
+				"url": "https://demo",
+				"clientid": "demouser",
+				"clientsecret": "******",
+				"tokenurl": "https://demo/oauth/token"
+			}
+		}`
 		config := integrationArtifactIntegrationTestOptions{
-			Host:                  "https://demo",
-			OAuthTokenProviderURL: "https://demo/oauth/token",
-			Username:              "demouser",
-			Password:              "******",
-			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
-			Platform:              "cf",
-			MessageBodyPath:       "",
-			ContentType:           "txt",
+			IFlowServiceKey:   iFlowServiceKey,
+			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
+			Platform:          "cf",
+			MessageBodyPath:   "",
+			ContentType:       "txt",
 		}
 
 		utils := newIntegrationArtifactIntegrationTestTestsUtils()
@@ -154,15 +174,20 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 		defer os.RemoveAll(dir) // clean up
 		assert.NoError(t, err, "Error when creating temp dir")
 		//init
+		iFlowServiceKey := `{
+			"oauth": {
+				"url": "https://demo",
+				"clientid": "demouser",
+				"clientsecret": "******",
+				"tokenurl": "https://demo/oauth/token"
+			}
+		}`
 		config := integrationArtifactIntegrationTestOptions{
-			Host:                  "https://demo",
-			OAuthTokenProviderURL: "https://demo/oauth/token",
-			Username:              "demouser",
-			Password:              "******",
-			IntegrationFlowID:     "CPI_IFlow_Call_using_Cert",
-			Platform:              "cf",
-			MessageBodyPath:       filepath.Join(dir, "test.txt"),
-			ContentType:           "txt",
+			IFlowServiceKey:   iFlowServiceKey,
+			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
+			Platform:          "cf",
+			MessageBodyPath:   filepath.Join(dir, "test.txt"),
+			ContentType:       "txt",
 		}
 
 		utils := newIntegrationArtifactIntegrationTestTestsUtils()

@@ -15,18 +15,15 @@ import (
 )
 
 type integrationArtifactIntegrationTestOptions struct {
-	Username                string `json:"username,omitempty"`
-	Password                string `json:"password,omitempty"`
+	IFlowServiceKey         string `json:"iFlowServiceKey,omitempty"`
 	IntegrationFlowID       string `json:"integrationFlowId,omitempty"`
 	Platform                string `json:"platform,omitempty"`
-	Host                    string `json:"host,omitempty"`
-	OAuthTokenProviderURL   string `json:"oAuthTokenProviderUrl,omitempty"`
 	IFlowServiceEndpointURL string `json:"iFlowServiceEndpointUrl,omitempty"`
 	ContentType             string `json:"contentType,omitempty"`
 	MessageBodyPath         string `json:"messageBodyPath,omitempty"`
 }
 
-// IntegrationArtifactIntegrationTestCommand Test xxxx
+// IntegrationArtifactIntegrationTestCommand Test the service endpoint of your iFlow
 func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
 	const STEP_NAME = "integrationArtifactIntegrationTest"
 
@@ -37,8 +34,8 @@ func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
 
 	var createIntegrationArtifactIntegrationTestCmd = &cobra.Command{
 		Use:   STEP_NAME,
-		Short: "Test xxxx",
-		Long:  `With this step you can obtain information about the service endpoints exposed by SAP Cloud Platform Integration on a tenant using OData API.Learn more about the SAP Cloud Integration remote API for getting service endpoint of deployed integration artifact [here](https://help.sap.com/viewer/368c481cd6954bdfa5d0435479fd4eaf/Cloud/en-US/d1679a80543f46509a7329243b595bdb.html).`,
+		Short: "Test the service endpoint of your iFlow",
+		Long:  `With this step you can test your intergration flow  exposed by SAP Cloud Platform Integration on a tenant using OData API.Learn more about the SAP Cloud Integration remote API for getting service endpoint of deployed integration artifact [here](https://help.sap.com/viewer/368c481cd6954bdfa5d0435479fd4eaf/Cloud/en-US/d1679a80543f46509a7329243b595bdb.html).`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			startTime = time.Now()
 			log.SetStepName(STEP_NAME)
@@ -53,8 +50,7 @@ func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
 				log.SetErrorCategory(log.ErrorConfiguration)
 				return err
 			}
-			log.RegisterSecret(stepConfig.Username)
-			log.RegisterSecret(stepConfig.Password)
+			log.RegisterSecret(stepConfig.IFlowServiceKey)
 
 			if len(GeneralConfig.HookConfig.SentryConfig.Dsn) > 0 {
 				sentryHook := log.NewSentryHook(GeneralConfig.HookConfig.SentryConfig.Dsn, GeneralConfig.CorrelationID)
@@ -101,21 +97,15 @@ func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
 }
 
 func addIntegrationArtifactIntegrationTestFlags(cmd *cobra.Command, stepConfig *integrationArtifactIntegrationTestOptions) {
-	cmd.Flags().StringVar(&stepConfig.Username, "username", os.Getenv("PIPER_username"), "User to authenticate to the SAP Cloud Platform Integration Service")
-	cmd.Flags().StringVar(&stepConfig.Password, "password", os.Getenv("PIPER_password"), "Password to authenticate to the SAP Cloud Platform Integration Service")
+	cmd.Flags().StringVar(&stepConfig.IFlowServiceKey, "iFlowServiceKey", os.Getenv("PIPER_iFlowServiceKey"), "User to authenticate to the SAP Cloud Platform Integration Service")
 	cmd.Flags().StringVar(&stepConfig.IntegrationFlowID, "integrationFlowId", os.Getenv("PIPER_integrationFlowId"), "Specifies the ID of the Integration Flow artifact")
-	cmd.Flags().StringVar(&stepConfig.Platform, "platform", os.Getenv("PIPER_platform"), "Specifies the running platform of the SAP Cloud platform integraion service")
-	cmd.Flags().StringVar(&stepConfig.Host, "host", os.Getenv("PIPER_host"), "Specifies the protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
-	cmd.Flags().StringVar(&stepConfig.OAuthTokenProviderURL, "oAuthTokenProviderUrl", os.Getenv("PIPER_oAuthTokenProviderUrl"), "Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
+	cmd.Flags().StringVar(&stepConfig.Platform, "platform", `cf`, "Specifies the running platform of the SAP Cloud platform integraion service")
 	cmd.Flags().StringVar(&stepConfig.IFlowServiceEndpointURL, "iFlowServiceEndpointUrl", os.Getenv("PIPER_iFlowServiceEndpointUrl"), "Specifies the URL endpoint of the iFlow. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.")
 	cmd.Flags().StringVar(&stepConfig.ContentType, "contentType", os.Getenv("PIPER_contentType"), "Specifies the content type of the file defined in messageBodyPath e.g. application/json")
 	cmd.Flags().StringVar(&stepConfig.MessageBodyPath, "messageBodyPath", os.Getenv("PIPER_messageBodyPath"), "Speficfies the relative file path to the message body.")
 
-	cmd.MarkFlagRequired("username")
-	cmd.MarkFlagRequired("password")
+	cmd.MarkFlagRequired("iFlowServiceKey")
 	cmd.MarkFlagRequired("integrationFlowId")
-	cmd.MarkFlagRequired("host")
-	cmd.MarkFlagRequired("oAuthTokenProviderUrl")
 }
 
 // retrieve step metadata
@@ -124,43 +114,28 @@ func integrationArtifactIntegrationTestMetadata() config.StepData {
 		Metadata: config.StepMetadata{
 			Name:        "integrationArtifactIntegrationTest",
 			Aliases:     []config.Alias{},
-			Description: "Test xxxx",
+			Description: "Test the service endpoint of your iFlow",
 		},
 		Spec: config.StepSpec{
 			Inputs: config.StepInputs{
 				Secrets: []config.StepSecrets{
-					{Name: "cpiCredentialsId", Description: "Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's", Type: "jenkins"},
+					{Name: "iFlowCredentialId", Description: "Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's", Type: "jenkins"},
 				},
 				Parameters: []config.StepParameters{
 					{
-						Name: "username",
+						Name: "iFlowServiceKey",
 						ResourceRef: []config.ResourceReference{
 							{
-								Name:  "cpiCredentialsId",
-								Param: "username",
+								Name:  "cpiIFlowCredentialId",
+								Param: "serviceKey",
 								Type:  "secret",
 							},
 						},
-						Scope:     []string{"PARAMETERS", "STAGES", "STEPS"},
+						Scope:     []string{"PARAMETERS"},
 						Type:      "string",
 						Mandatory: true,
 						Aliases:   []config.Alias{},
-						Default:   os.Getenv("PIPER_username"),
-					},
-					{
-						Name: "password",
-						ResourceRef: []config.ResourceReference{
-							{
-								Name:  "cpiCredentialsId",
-								Param: "password",
-								Type:  "secret",
-							},
-						},
-						Scope:     []string{"PARAMETERS", "STAGES", "STEPS"},
-						Type:      "string",
-						Mandatory: true,
-						Aliases:   []config.Alias{},
-						Default:   os.Getenv("PIPER_password"),
+						Default:   os.Getenv("PIPER_iFlowServiceKey"),
 					},
 					{
 						Name:        "integrationFlowId",
@@ -178,25 +153,7 @@ func integrationArtifactIntegrationTestMetadata() config.StepData {
 						Type:        "string",
 						Mandatory:   false,
 						Aliases:     []config.Alias{},
-						Default:     os.Getenv("PIPER_platform"),
-					},
-					{
-						Name:        "host",
-						ResourceRef: []config.ResourceReference{},
-						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
-						Type:        "string",
-						Mandatory:   true,
-						Aliases:     []config.Alias{},
-						Default:     os.Getenv("PIPER_host"),
-					},
-					{
-						Name:        "oAuthTokenProviderUrl",
-						ResourceRef: []config.ResourceReference{},
-						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
-						Type:        "string",
-						Mandatory:   true,
-						Aliases:     []config.Alias{},
-						Default:     os.Getenv("PIPER_oAuthTokenProviderUrl"),
+						Default:     `cf`,
 					},
 					{
 						Name:        "iFlowServiceEndpointUrl",

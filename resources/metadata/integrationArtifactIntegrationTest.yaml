@@ -1,42 +1,27 @@
 metadata:
   name: integrationArtifactIntegrationTest
-  description: Test xxxx
+  description: Test the service endpoint of your iFlow
   longDescription: |
-    With this step you can obtain information about the service endpoints exposed by SAP Cloud Platform Integration on a tenant using OData API.Learn more about the SAP Cloud Integration remote API for getting service endpoint of deployed integration artifact [here](https://help.sap.com/viewer/368c481cd6954bdfa5d0435479fd4eaf/Cloud/en-US/d1679a80543f46509a7329243b595bdb.html).
+    With this step you can test your intergration flow  exposed by SAP Cloud Platform Integration on a tenant using OData API.Learn more about the SAP Cloud Integration remote API for getting service endpoint of deployed integration artifact [here](https://help.sap.com/viewer/368c481cd6954bdfa5d0435479fd4eaf/Cloud/en-US/d1679a80543f46509a7329243b595bdb.html).
 
 spec:
   inputs:
     secrets:
-      - name: cpiCredentialsId
+      - name: iFlowCredentialId
         description: Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's
         type: jenkins
     params:
-      - name: username
+      - name: iFlowServiceKey
         type: string
         description: User to authenticate to the SAP Cloud Platform Integration Service
         scope:
           - PARAMETERS
-          - STAGES
-          - STEPS
         mandatory: true
         secret: true
         resourceRef:
-          - name: cpiCredentialsId
+          - name: cpiIFlowCredentialId
             type: secret
-            param: username
-      - name: password
-        type: string
-        description: Password to authenticate to the SAP Cloud Platform Integration Service
-        scope:
-          - PARAMETERS
-          - STAGES
-          - STEPS
-        mandatory: true
-        secret: true
-        resourceRef:
-          - name: cpiCredentialsId
-            type: secret
-            param: password
+            param: serviceKey
       - name: integrationFlowId
         type: string
         description: Specifies the ID of the Integration Flow artifact
@@ -53,22 +38,10 @@ spec:
           - STAGES
           - STEPS
         mandatory: false
-      - name: host
-        type: string
-        description: Specifies the protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
-        scope:
-          - PARAMETERS
-          - STAGES
-          - STEPS
-        mandatory: true
-      - name: oAuthTokenProviderUrl
-        type: string
-        description: Specifies the oAuth Provider protocol and host address, including the port. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
-        scope:
-          - PARAMETERS
-          - STAGES
-          - STEPS
-        mandatory: true
+        default: cf
+        possibleValues:
+          - cf
+          - neo
       - name: iFlowServiceEndpointUrl
         type: string
         description: Specifies the URL endpoint of the iFlow. Please provide in the format `<protocol>://<host>:<port>`. Supported protocols are `http` and `https`.
@@ -76,7 +49,6 @@ spec:
           - PARAMETERS
           - STAGES
           - STEPS
-        mandatory: false
       - name: contentType
         type: string
         description: Specifies the content type of the file defined in messageBodyPath e.g. application/json
