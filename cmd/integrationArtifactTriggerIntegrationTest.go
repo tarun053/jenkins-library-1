@@ -15,29 +15,29 @@ import (
 	"github.com/pkg/errors"
 )
 
-type integrationArtifactIntegrationTestUtils interface {
+type integrationArtifactTriggerIntegrationTestUtils interface {
 	command.ExecRunner
 
 	FileExists(filename string) (bool, error)
 
 	// Add more methods here, or embed additional interfaces, or remove/replace as required.
-	// The integrationArtifactIntegrationTestUtils interface should be descriptive of your runtime dependencies,
+	// The integrationArtifactTriggerIntegrationTestUtils interface should be descriptive of your runtime dependencies,
 	// i.e. include everything you need to be able to mock in tests.
 	// Unit tests shall be executable in parallel (not depend on global state), and don't (re-)test dependencies.
 }
 
-type integrationArtifactIntegrationTestUtilsBundle struct {
+type integrationArtifactTriggerIntegrationTestUtilsBundle struct {
 	*command.Command
 	*piperutils.Files
 
-	// Embed more structs as necessary to implement methods or interfaces you add to integrationArtifactIntegrationTestUtils.
+	// Embed more structs as necessary to implement methods or interfaces you add to integrationArtifactTriggerIntegrationTestUtils.
 	// Structs embedded in this way must each have a unique set of methods attached.
 	// If there is no struct which implements the method you need, attach the method to
-	// integrationArtifactIntegrationTestUtilsBundle and forward to the implementation of the dependency.
+	// integrationArtifactTriggerIntegrationTestUtilsBundle and forward to the implementation of the dependency.
 }
 
-func newIntegrationArtifactIntegrationTestUtils() integrationArtifactIntegrationTestUtils {
-	utils := integrationArtifactIntegrationTestUtilsBundle{
+func newIntegrationArtifactTriggerIntegrationTestUtils() integrationArtifactTriggerIntegrationTestUtils {
+	utils := integrationArtifactTriggerIntegrationTestUtilsBundle{
 		Command: &command.Command{},
 		Files:   &piperutils.Files{},
 	}
@@ -47,10 +47,10 @@ func newIntegrationArtifactIntegrationTestUtils() integrationArtifactIntegration
 	return &utils
 }
 
-func integrationArtifactIntegrationTest(config integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData) {
+func integrationArtifactTriggerIntegrationTest(config integrationArtifactTriggerIntegrationTestOptions, telemetryData *telemetry.CustomData) {
 	// Utils can be used wherever the command.ExecRunner interface is expected.
 	// It can also be used for example as a mavenExecRunner.
-	utils := newIntegrationArtifactIntegrationTestUtils()
+	utils := newIntegrationArtifactTriggerIntegrationTestUtils()
 	httpClient := &piperhttp.Client{}
 	// For HTTP calls import  piperhttp "github.com/SAP/jenkins-library/pkg/http"
 	// and use a  &piperhttp.Client{} in a custom system
@@ -58,14 +58,13 @@ func integrationArtifactIntegrationTest(config integrationArtifactIntegrationTes
 
 	// Error situations should be bubbled up until they reach the line below which will then stop execution
 	// through the log.Entry().Fatal() call leading to an os.Exit(1) in the end.
-	err := runIntegrationArtifactIntegrationTest(&config, telemetryData, utils, httpClient)
+	err := runIntegrationArtifactTriggerIntegrationTest(&config, telemetryData, utils, httpClient)
 	if err != nil {
 		log.Entry().WithError(err).Fatal("step execution failed")
 	}
 }
 
-func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpClient piperhttp.Sender) error {
-
+func runIntegrationArtifactTriggerIntegrationTest(config *integrationArtifactTriggerIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactTriggerIntegrationTestUtils, httpClient piperhttp.Sender) error {
 	var commonPipelineEnvironment integrationArtifactGetServiceEndpointCommonPipelineEnvironment
 	var serviceEndpointUrl string
 	if len(config.IFlowServiceEndpointURL) > 0 {
@@ -80,16 +79,16 @@ func runIntegrationArtifactIntegrationTest(config *integrationArtifactIntegratio
 	log.Entry().Info("The Service URL : ", serviceEndpointUrl)
 
 	// Here we trigger the iFlow Service Endpoint.
-	IflowErr := callIFlowURL(config, telemetryData, utils, httpClient, serviceEndpointUrl)
-	if IflowErr != nil {
+	IFlowErr := callIFlowURL(config, telemetryData, utils, httpClient, serviceEndpointUrl)
+	if IFlowErr != nil {
 		log.SetErrorCategory(log.ErrorService)
-		return fmt.Errorf("failed to execute iFlow: %w", IflowErr)
+		return fmt.Errorf("failed to execute iFlow: %w", IFlowErr)
 	}
 
 	return nil
 }
 
-func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactIntegrationTestUtils, httpIFlowClient piperhttp.Sender, serviceEndpointUrl string) error {
+func callIFlowURL(config *integrationArtifactTriggerIntegrationTestOptions, telemetryData *telemetry.CustomData, utils integrationArtifactTriggerIntegrationTestUtils, httpIFlowClient piperhttp.Sender, serviceEndpointUrl string) error {
 
 	var fileBody []byte
 	var httpMethod string
@@ -124,6 +123,9 @@ func callIFlowURL(config *integrationArtifactIntegrationTestOptions, telemetryDa
 	}
 
 	serviceKey, err := cpi.ReadCpiServiceKey(config.IFlowServiceKey)
+	if err != nil {
+		return err
+	}
 	clientOptions := piperhttp.ClientOptions{}
 	tokenParameters := cpi.TokenParameters{TokenURL: serviceKey.OAuth.OAuthTokenProviderURL, Username: serviceKey.OAuth.ClientID, Password: serviceKey.OAuth.ClientSecret, Client: httpIFlowClient}
 	token, err := cpi.CommonUtils.GetBearerToken(tokenParameters)

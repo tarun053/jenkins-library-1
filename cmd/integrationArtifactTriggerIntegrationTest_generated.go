@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type integrationArtifactIntegrationTestOptions struct {
+type integrationArtifactTriggerIntegrationTestOptions struct {
 	IFlowServiceKey         string `json:"iFlowServiceKey,omitempty"`
 	IntegrationFlowID       string `json:"integrationFlowId,omitempty"`
 	Platform                string `json:"platform,omitempty"`
@@ -23,16 +23,16 @@ type integrationArtifactIntegrationTestOptions struct {
 	MessageBodyPath         string `json:"messageBodyPath,omitempty"`
 }
 
-// IntegrationArtifactIntegrationTestCommand Test the service endpoint of your iFlow
-func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
-	const STEP_NAME = "integrationArtifactIntegrationTest"
+// IntegrationArtifactTriggerIntegrationTestCommand Test the service endpoint of your iFlow
+func IntegrationArtifactTriggerIntegrationTestCommand() *cobra.Command {
+	const STEP_NAME = "integrationArtifactTriggerIntegrationTest"
 
-	metadata := integrationArtifactIntegrationTestMetadata()
-	var stepConfig integrationArtifactIntegrationTestOptions
+	metadata := integrationArtifactTriggerIntegrationTestMetadata()
+	var stepConfig integrationArtifactTriggerIntegrationTestOptions
 	var startTime time.Time
 	var logCollector *log.CollectorHook
 
-	var createIntegrationArtifactIntegrationTestCmd = &cobra.Command{
+	var createIntegrationArtifactTriggerIntegrationTestCmd = &cobra.Command{
 		Use:   STEP_NAME,
 		Short: "Test the service endpoint of your iFlow",
 		Long:  `With this step you can test your intergration flow  exposed by SAP Cloud Platform Integration on a tenant using OData API.Learn more about the SAP Cloud Integration remote API for getting service endpoint of deployed integration artifact [here](https://help.sap.com/viewer/368c481cd6954bdfa5d0435479fd4eaf/Cloud/en-US/d1679a80543f46509a7329243b595bdb.html).`,
@@ -86,17 +86,17 @@ func IntegrationArtifactIntegrationTestCommand() *cobra.Command {
 					GeneralConfig.HookConfig.SplunkConfig.Index,
 					GeneralConfig.HookConfig.SplunkConfig.SendLogs)
 			}
-			integrationArtifactIntegrationTest(stepConfig, &telemetryData)
+			integrationArtifactTriggerIntegrationTest(stepConfig, &telemetryData)
 			telemetryData.ErrorCode = "0"
 			log.Entry().Info("SUCCESS")
 		},
 	}
 
-	addIntegrationArtifactIntegrationTestFlags(createIntegrationArtifactIntegrationTestCmd, &stepConfig)
-	return createIntegrationArtifactIntegrationTestCmd
+	addIntegrationArtifactTriggerIntegrationTestFlags(createIntegrationArtifactTriggerIntegrationTestCmd, &stepConfig)
+	return createIntegrationArtifactTriggerIntegrationTestCmd
 }
 
-func addIntegrationArtifactIntegrationTestFlags(cmd *cobra.Command, stepConfig *integrationArtifactIntegrationTestOptions) {
+func addIntegrationArtifactTriggerIntegrationTestFlags(cmd *cobra.Command, stepConfig *integrationArtifactTriggerIntegrationTestOptions) {
 	cmd.Flags().StringVar(&stepConfig.IFlowServiceKey, "iFlowServiceKey", os.Getenv("PIPER_iFlowServiceKey"), "User to authenticate to the SAP Cloud Platform Integration Service")
 	cmd.Flags().StringVar(&stepConfig.IntegrationFlowID, "integrationFlowId", os.Getenv("PIPER_integrationFlowId"), "Specifies the ID of the Integration Flow artifact")
 	cmd.Flags().StringVar(&stepConfig.Platform, "platform", `cf`, "Specifies the running platform of the SAP Cloud platform integraion service")
@@ -109,10 +109,10 @@ func addIntegrationArtifactIntegrationTestFlags(cmd *cobra.Command, stepConfig *
 }
 
 // retrieve step metadata
-func integrationArtifactIntegrationTestMetadata() config.StepData {
+func integrationArtifactTriggerIntegrationTestMetadata() config.StepData {
 	var theMetaData = config.StepData{
 		Metadata: config.StepMetadata{
-			Name:        "integrationArtifactIntegrationTest",
+			Name:        "integrationArtifactTriggerIntegrationTest",
 			Aliases:     []config.Alias{},
 			Description: "Test the service endpoint of your iFlow",
 		},

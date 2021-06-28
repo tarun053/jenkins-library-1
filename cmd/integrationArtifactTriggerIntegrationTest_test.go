@@ -10,25 +10,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type integrationArtifactIntegrationTestMockUtils struct {
+type integrationArtifactTriggerIntegrationTestMockUtils struct {
 	*mock.ExecMockRunner
 	*mock.FilesMock
 }
 
-func newIntegrationArtifactIntegrationTestTestsUtils() integrationArtifactIntegrationTestMockUtils {
-	utils := integrationArtifactIntegrationTestMockUtils{
+func newIntegrationArtifactTriggerIntegrationTestTestsUtils() integrationArtifactTriggerIntegrationTestMockUtils {
+	utils := integrationArtifactTriggerIntegrationTestMockUtils{
 		ExecMockRunner: &mock.ExecMockRunner{},
 		FilesMock:      &mock.FilesMock{},
 	}
 	return utils
 }
 
-func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
+func TestRunIntegrationArtifactTriggerIntegrationTest(t *testing.T) {
 	//t.Parallel()
 	//t.Run("happy path", func(t *testing.T) {
 	//	t.Parallel()
 	//	// init
-	//	config := integrationArtifactIntegrationTestOptions{
+	//	config := integrationArtifactTriggerIntegrationTestOptions{
 	//		Host:                  "https://demo",
 	//		OAuthTokenProviderURL: "https://demo/oauth/token",
 	//		Username:              "demouser",
@@ -37,12 +37,12 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 	//		Platform:              "cf",
 	//	}
 	//
-	//	utils := newIntegrationArtifactIntegrationTestTestsUtils()
+	//	utils := newintegrationArtifactTriggerIntegrationTestTestsUtils()
 	//	utils.AddFile("file.txt", []byte("dummy content"))
 	//	httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
 	//
 	//	// test
-	//	err := runIntegrationArtifactIntegrationTest(&config, nil, utils, &httpClient)
+	//	err := runintegrationArtifactTriggerIntegrationTest(&config, nil, utils, &httpClient)
 	//
 	//	// assert
 	//	assert.NoError(t, err)
@@ -58,7 +58,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 				"tokenurl": "https://demo/oauth/token"
 			}
 		}`
-		config := integrationArtifactIntegrationTestOptions{
+		config := integrationArtifactTriggerIntegrationTestOptions{
 			IFlowServiceKey:   iFlowServiceKey,
 			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
 			Platform:          "cf",
@@ -66,7 +66,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 			ContentType:       "",
 		}
 
-		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils := newIntegrationArtifactTriggerIntegrationTestTestsUtils()
 		utils.AddFile("file.txt", []byte("dummycontent"))
 		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
 
@@ -87,7 +87,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 				"tokenurl": "https://demo/oauth/token"
 			}
 		}`
-		config := integrationArtifactIntegrationTestOptions{
+		config := integrationArtifactTriggerIntegrationTestOptions{
 			IFlowServiceKey:   iFlowServiceKey,
 			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
 			Platform:          "cf",
@@ -95,7 +95,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 			ContentType:       "txt",
 		}
 
-		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils := newIntegrationArtifactTriggerIntegrationTestTestsUtils()
 		//no file created here. error expected
 		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
 
@@ -119,7 +119,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 				"tokenurl": "https://demo/oauth/token"
 			}
 		}`
-		config := integrationArtifactIntegrationTestOptions{
+		config := integrationArtifactTriggerIntegrationTestOptions{
 			IFlowServiceKey:   iFlowServiceKey,
 			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
 			Platform:          "cf",
@@ -127,7 +127,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 			ContentType:       "txt",
 		}
 
-		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils := newIntegrationArtifactTriggerIntegrationTestTestsUtils()
 		utils.AddFile(config.MessageBodyPath, []byte("dummycontent1")) //have to add a file here to see in utils
 		ioutil.WriteFile(config.MessageBodyPath, []byte("dummycontent2"), 0755)
 		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
@@ -149,7 +149,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 				"tokenurl": "https://demo/oauth/token"
 			}
 		}`
-		config := integrationArtifactIntegrationTestOptions{
+		config := integrationArtifactTriggerIntegrationTestOptions{
 			IFlowServiceKey:   iFlowServiceKey,
 			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
 			Platform:          "cf",
@@ -157,7 +157,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 			ContentType:       "txt",
 		}
 
-		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils := newIntegrationArtifactTriggerIntegrationTestTestsUtils()
 		//utils.AddFile(config.MessageBodyPath, []byte("dummycontent1")) //have to add a file here to see in utils
 		//ioutil.WriteFile(config.MessageBodyPath, []byte("dummycontent2"), 0755)
 		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
@@ -182,7 +182,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 				"tokenurl": "https://demo/oauth/token"
 			}
 		}`
-		config := integrationArtifactIntegrationTestOptions{
+		config := integrationArtifactTriggerIntegrationTestOptions{
 			IFlowServiceKey:   iFlowServiceKey,
 			IntegrationFlowID: "CPI_IFlow_Call_using_Cert",
 			Platform:          "cf",
@@ -190,7 +190,7 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 			ContentType:       "txt",
 		}
 
-		utils := newIntegrationArtifactIntegrationTestTestsUtils()
+		utils := newIntegrationArtifactTriggerIntegrationTestTestsUtils()
 		utils.AddFile(config.MessageBodyPath, []byte(nil)) //have to add a file here to see in utils
 		ioutil.WriteFile(config.MessageBodyPath, []byte(nil), 0755)
 		httpClient := httpMockCpis{CPIFunction: "IntegrationArtifactGetServiceEndpoint", ResponseBody: ``, TestType: "PositiveAndGetetIntegrationArtifactGetServiceResBody"}
@@ -205,12 +205,12 @@ func TestRunIntegrationArtifactIntegrationTest(t *testing.T) {
 	// t.Run("error path", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	// init
-	// 	config := integrationArtifactIntegrationTestOptions{}
+	// 	config := integrationArtifactTriggerIntegrationTestOptions{}
 
-	// 	utils := newIntegrationArtifactIntegrationTestTestsUtils()
+	// 	utils := newintegrationArtifactTriggerIntegrationTestTestsUtils()
 
 	// 	// test
-	// 	err := runIntegrationArtifactIntegrationTest(&config, nil, utils)
+	// 	err := runintegrationArtifactTriggerIntegrationTest(&config, nil, utils)
 
 	// 	// assert
 	// 	assert.EqualError(t, err, "cannot run without important file")
