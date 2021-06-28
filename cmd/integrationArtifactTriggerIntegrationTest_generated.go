@@ -119,15 +119,15 @@ func integrationArtifactTriggerIntegrationTestMetadata() config.StepData {
 		Spec: config.StepSpec{
 			Inputs: config.StepInputs{
 				Secrets: []config.StepSecrets{
-					{Name: "iFlowCredentialId", Description: "Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's", Type: "jenkins"},
+					{Name: "iFlowCredentialsId", Description: "Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's", Type: "jenkins"},
 				},
 				Parameters: []config.StepParameters{
 					{
 						Name: "iFlowServiceKey",
 						ResourceRef: []config.ResourceReference{
 							{
-								Name:  "cpiIFlowCredentialId",
-								Param: "serviceKey",
+								Name:  "iFlowCredentialsId",
+								Param: "iFlowServiceKey",
 								Type:  "secret",
 							},
 						},
@@ -140,7 +140,7 @@ func integrationArtifactTriggerIntegrationTestMetadata() config.StepData {
 					{
 						Name:        "integrationFlowId",
 						ResourceRef: []config.ResourceReference{},
-						Scope:       []string{"PARAMETERS", "STAGES", "STEPS"},
+						Scope:       []string{"PARAMETERS", "STAGES", "STEPS", "GENERAL"},
 						Type:        "string",
 						Mandatory:   true,
 						Aliases:     []config.Alias{},

@@ -7,7 +7,7 @@ metadata:
 spec:
   inputs:
     secrets:
-      - name: iFlowCredentialId
+      - name: iFlowCredentialsId
         description: Jenkins credentials ID containing username and password for authentication to the SAP Cloud Platform Integration API's
         type: jenkins
     params:
@@ -19,9 +19,9 @@ spec:
         mandatory: true
         secret: true
         resourceRef:
-          - name: cpiIFlowCredentialId
+          - name: iFlowCredentialsId
             type: secret
-            param: serviceKey
+            param: iFlowServiceKey
       - name: integrationFlowId
         type: string
         description: Specifies the ID of the Integration Flow artifact
@@ -29,6 +29,7 @@ spec:
           - PARAMETERS
           - STAGES
           - STEPS
+          - GENERAL
         mandatory: true
       - name: platform
         type: string
