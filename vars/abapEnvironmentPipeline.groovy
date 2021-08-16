@@ -1,6 +1,6 @@
-void call(parameters) {
+void call(parameters)
+node('jenkins233slave'){
     pipeline {
-        node('jenkins233slave')
         options {
             skipDefaultCheckout()
         }
