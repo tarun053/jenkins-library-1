@@ -1,6 +1,6 @@
 void call(parameters) {
     pipeline {
-        node('jenkins233slave'){
+        node('jenkins233slave')
         options {
             skipDefaultCheckout()
         }
@@ -78,7 +78,6 @@ void call(parameters) {
             cleanup {
                 abapEnvironmentPipelineStagePost script: parameters.script
             }
-        }
         }
     }
 }
