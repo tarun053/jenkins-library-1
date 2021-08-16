@@ -7,25 +7,29 @@ void call(parameters) {
         stages {
 
             stage('Init') {
+               node('jenkins233slave'){
                 steps {
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
-
+            }
             stage('Initial Checks') {
+               node('jenkins233slave'){
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
             }
+            }
 
             stage('Prepare System') {
+               node('jenkins233slave'){
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
                     abapEnvironmentPipelineStagePrepareSystem script: parameters.script
                 }
             }
-
+            }
             stage('Clone Repositories') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
