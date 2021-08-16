@@ -73,6 +73,7 @@ void call(parameters) {
             }
 
         }
+        }
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
             success {buildSetResult(currentBuild)}
@@ -83,6 +84,6 @@ void call(parameters) {
                 abapEnvironmentPipelineStagePost script: parameters.script
             }
         }
-        }
+        
     }
 }
