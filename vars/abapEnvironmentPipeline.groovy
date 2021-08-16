@@ -1,6 +1,6 @@
 void call(parameters) {
     pipeline {
-        agent jenkins233slave
+        agent {jenkins233slave
         options {
             skipDefaultCheckout()
         }
@@ -80,4 +80,5 @@ void call(parameters) {
             }
         }
     }
+}
 }
