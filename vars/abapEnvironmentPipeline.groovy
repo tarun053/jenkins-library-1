@@ -1,6 +1,6 @@
 void call(parameters) {
     pipeline {
-        agent { label ('jenkins233slave') }
+        agent jenkins233slave
         options {
             skipDefaultCheckout()
         }
