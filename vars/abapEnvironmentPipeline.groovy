@@ -5,10 +5,10 @@ void call(parameters) {
             skipDefaultCheckout()
         }
         stages {
-         node('jenkins233slave'){
+         
             stage('Init') {
-              
                 steps {
+                   node('jenkins233slave'){
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
