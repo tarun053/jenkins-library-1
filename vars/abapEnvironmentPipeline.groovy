@@ -1,9 +1,9 @@
-void call(parameters)
-node('jenkins233slave'){
+void call(parameters){
     pipeline {
         options {
             skipDefaultCheckout()
         }
+        node('jenkins233slave'){
         stages {
 
             stage('Init') {
@@ -67,7 +67,7 @@ node('jenkins233slave'){
                     abapEnvironmentPipelineStagePublish script: parameters.script
                 }
             }
-
+        }
         }
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
