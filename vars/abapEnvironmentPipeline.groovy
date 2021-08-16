@@ -1,6 +1,10 @@
 void call(parameters) {
     pipeline {
-        agent none
+        agent {
+         node {
+        label ''jenkins233slave''
+    }
+}
         options {
             skipDefaultCheckout()
         }
@@ -8,54 +12,54 @@ void call(parameters) {
          
             stage('Init') {
                 steps {
-                   node('jenkins233slave'){
+                  
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
-         }
+         
             stage('Initial Checks') {
              
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
-                      node('jenkins233slave'){
+                     
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
             }
-            }
+            
 
             stage('Prepare System') {
                
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
-                    node('jenkins233slave'){
+                   
                     abapEnvironmentPipelineStagePrepareSystem script: parameters.script
                 }
             }
-            }
+            
             stage('Clone Repositories') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
-                   node('jenkins233slave'){
+                 
                     abapEnvironmentPipelineStageCloneRepositories script: parameters.script
                 }
             }
-            }
+            
             stage('ATC') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
-                     node('jenkins233slave'){
+                     
                     abapEnvironmentPipelineStageATC script: parameters.script
                 }
             }
-            }
+            
             stage('Build') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
-                  node('jenkins233slave'){
+                 
                     abapEnvironmentPipelineStageBuild script: parameters.script
                 }
             }
-            }
+            
             stage('Integration Tests') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
