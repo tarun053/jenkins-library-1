@@ -5,7 +5,7 @@ void call(parameters) {
             skipDefaultCheckout()
         }
         stages {
-         node('jenkins233slave'){
+         
             stage('Init') {
               
                 steps {
@@ -73,7 +73,7 @@ void call(parameters) {
             }
 
         }
-        }
+        
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
             success {buildSetResult(currentBuild)}
