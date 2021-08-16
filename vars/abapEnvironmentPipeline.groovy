@@ -5,14 +5,14 @@ void call(parameters) {
             skipDefaultCheckout()
         }
         stages {
-         
+         node('jenkins233slave'){
             stage('Init') {
               
                 steps {
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
-            
+         }
             stage('Initial Checks') {
              
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
