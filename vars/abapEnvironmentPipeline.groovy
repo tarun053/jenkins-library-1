@@ -1,5 +1,6 @@
 void call(parameters){
     pipeline {
+       agent none
         options {
             skipDefaultCheckout()
         }
