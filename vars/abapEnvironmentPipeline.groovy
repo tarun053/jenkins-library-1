@@ -2,7 +2,7 @@ void call(parameters) {
     pipeline {
         agent {
          node {
-        label ''jenkins233slave''
+        label 'jenkins233slave'
     }
 }
         options {
