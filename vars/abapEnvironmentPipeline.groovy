@@ -4,7 +4,7 @@
         options {
             skipDefaultCheckout()
         }
- node('jenkins233slave'){
+ node(jenkins233slave){
         stages {
 
             stage('Init') {
