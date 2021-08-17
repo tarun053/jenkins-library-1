@@ -7,14 +7,15 @@ void call(parameters) {
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
-
+        }
+         node('jenkins233slave'){
             stage('Initial Checks') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
             }
-
+         }
             stage('Prepare System') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
@@ -63,7 +64,7 @@ void call(parameters) {
                     abapEnvironmentPipelineStagePublish script: parameters.script
                 }
             }
-        }
+        
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
             success {buildSetResult(currentBuild)}
