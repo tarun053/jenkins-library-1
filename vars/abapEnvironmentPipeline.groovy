@@ -1,10 +1,9 @@
-   pipeline {
-       agent {
-          label (jenkins233slave)
+   void call(parameters) {
+    pipeline {
+        agent none
         options {
             skipDefaultCheckout()
         }
-       
         stages {
 
             stage('Init') {
