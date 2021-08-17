@@ -4,30 +4,25 @@
         options {
             skipDefaultCheckout()
         }
+ node('jenkins233slave'){
         stages {
 
             stage('Init') {
                 steps {
-                node('jenkins233slave'){
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
-            }
             }
             stage('Initial Checks') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
-                   node('jenkins233slave'){
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
-            }
             }
             stage('Prepare System') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
-                     node('jenkins233slave'){
                     abapEnvironmentPipelineStagePrepareSystem script: parameters.script
                 }
-            }
             }
             stage('Clone Repositories') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
@@ -72,6 +67,7 @@
             }
 
         }
+ }
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
             success {buildSetResult(currentBuild)}
