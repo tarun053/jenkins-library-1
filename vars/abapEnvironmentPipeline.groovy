@@ -2,9 +2,9 @@
     pipeline {
         node("jenkins233slave"){
  //        agent none
- //       options {
- //           skipDefaultCheckout()
- //        }
+        options {
+          skipDefaultCheckout()
+       }
         stages {
 
             stage('Init') {
