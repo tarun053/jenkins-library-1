@@ -8,11 +8,13 @@
 
             stage('Init') {
                 steps {
+                agent { label 'jenkins233slave' }
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
 
             stage('Initial Checks') {
+                 agent { label 'jenkins233slave' }
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
