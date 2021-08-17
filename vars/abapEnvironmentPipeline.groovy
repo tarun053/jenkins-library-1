@@ -14,9 +14,9 @@
             }
             }
             stage('Initial Checks') {
-               node('jenkins233slave'){
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
+                   node('jenkins233slave'){
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
             }
@@ -24,10 +24,11 @@
             stage('Prepare System') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
+                     node('jenkins233slave'){
                     abapEnvironmentPipelineStagePrepareSystem script: parameters.script
                 }
             }
-
+            }
             stage('Clone Repositories') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
