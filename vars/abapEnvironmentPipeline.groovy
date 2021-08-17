@@ -1,9 +1,6 @@
 void call(parameters) {
     pipeline {
-        agent none
-        options {
-            skipDefaultCheckout()
-        }       
+        node('jenkins233slave'){
         stages {
 
             stage('Init') {
@@ -79,4 +76,5 @@ void call(parameters) {
             }
         }
     }
+}
 }
