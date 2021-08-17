@@ -1,9 +1,10 @@
    void call(parameters) {
     pipeline {
-        agent none
-        options {
-            skipDefaultCheckout()
-        }
+        node("jenkins233slave"){
+ //        agent none
+ //       options {
+ //           skipDefaultCheckout()
+ //        }
         stages {
 
             stage('Init') {
@@ -79,5 +80,6 @@
                 abapEnvironmentPipelineStagePost script: parameters.script
             }
         }
+       }
     }
 }
