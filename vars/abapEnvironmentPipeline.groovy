@@ -1,7 +1,6 @@
 void call(parameters) {
     pipeline {
         node('jenkins233slave'){
-        stages {
 
             stage('Init') {
                 steps {
@@ -77,4 +76,4 @@ void call(parameters) {
         }
     }
 }
-}
+
