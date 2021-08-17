@@ -1,7 +1,6 @@
    void call(parameters) {
-    pipeline {
-        node("jenkins233slave"){
- //        agent none
+    pipeline {     
+     agent none
         options {
           skipDefaultCheckout()
        }
@@ -80,6 +79,6 @@
                 abapEnvironmentPipelineStagePost script: parameters.script
             }
         }
-       }
+       
     }
 }
