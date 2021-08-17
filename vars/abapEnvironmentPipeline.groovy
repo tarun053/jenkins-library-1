@@ -1,10 +1,9 @@
    void call(parameters) {
     pipeline {
-        agent {  label "jenkins233slave" } 
+        agent none
         options {
             skipDefaultCheckout()
         }
- node(jenkins233slave){
         stages {
 
             stage('Init') {
@@ -12,18 +11,21 @@
                     abapEnvironmentPipelineStageInit script: parameters.script, customDefaults: ['com.sap.piper/pipeline/abapEnvironmentPipelineStageDefaults.yml'].plus(parameters.customDefaults ?: [])
                 }
             }
+
             stage('Initial Checks') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get("Build")}}
                 steps {
                     abapEnvironmentPipelineStageInitialChecks script: parameters.script
                 }
             }
+
             stage('Prepare System') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
                     abapEnvironmentPipelineStagePrepareSystem script: parameters.script
                 }
             }
+
             stage('Clone Repositories') {
                 when {expression {return parameters.script.commonPipelineEnvironment.configuration.runStage?.get(env.STAGE_NAME)}}
                 steps {
@@ -67,7 +69,6 @@
             }
 
         }
- }
         post {
             /* https://jenkins.io/doc/book/pipeline/syntax/#post */
             success {buildSetResult(currentBuild)}
