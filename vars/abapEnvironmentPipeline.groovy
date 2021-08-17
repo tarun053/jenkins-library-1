@@ -1,5 +1,6 @@
    pipeline {
-       node('jenkins233slave'){
+       agent {
+          label (jenkins233slave)
         options {
             skipDefaultCheckout()
         }
